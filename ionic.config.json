@@ -1,0 +1,7 @@
+{
+  "name": "Wallpapers-4k",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
