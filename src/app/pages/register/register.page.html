@@ -1,0 +1,86 @@
+<ion-content [fullscreen]="true">
+  <form [formGroup]="registerForm" (ngSubmit)="doRegister()">
+    <ion-card>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <app-input
+              [type]="'text'"
+              [label]="'name'"
+              [placeholder]="'Enter your name'"
+              [control]="name"
+             >
+            </app-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <app-input
+              [type]="'text'"
+              [label]="'Last name'"
+              [placeholder]="'Enter your last name'"
+              [control]="lastname"
+             >
+            </app-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <app-input
+              [type]="'email'"
+              [label]="'Email'"
+              [placeholder]="'Enter your email'"
+              [control]="email"
+             >
+            </app-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <app-input
+              [type]="'password'"
+              [label]="'Password'"
+              [placeholder]="'Enter your password'"
+              [control]="password"
+             >
+            </app-input>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <app-input
+              [type]="'password'"
+              [label]="'Confirm Password'"
+              [placeholder]="'Confirm your password'"
+              [control]="confirmPassword"
+             >
+            </app-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text color="medium" class="signup-link">
+              ¿Ya tienes una cuenta?
+              <app-link to="/login">login aquí</app-link>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <app-button
+              text="Register"
+              type ="submit"
+              [disabled] ="registerForm.invalid"
+              
+            >
+            </app-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </form>
+</ion-content>

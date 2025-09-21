@@ -1,0 +1,11 @@
+<ion-fab [vertical]="vertical" [horizontal]="horizontal" slot="fixed">
+  <ion-fab-button>
+    <ion-icon [name]="icon"></ion-icon>
+  </ion-fab-button>
+
+  <ion-fab-list side= top *ngIf="actions?.length">
+    <ion-fab-button *ngFor="let a of actions; let i=index" (click)="onAction(a,i,$event)">
+      <ion-icon [name]="a.icon"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>

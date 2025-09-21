@@ -1,0 +1,22 @@
+
+.title {
+  font-size: clamp(14px, 2vw, 18px); 
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.wallpaper-grid app-card {
+  display: block;
+  width: 100%;
+  max-width: 300px; /* ancho máximo de cada card */
+  margin: 8px;
+  overflow: hidden;  /* asegura que nada se salga del contenedor */
+  border-radius: 12px;
+}
+
+.wallpaper-grid app-card img {
+  width: 100%;
+  height: 200px;      /* altura uniforme */
+  object-fit: cover;  /* recorta sin deformar */
+  display: block;     /* elimina espacio inferior */
+}

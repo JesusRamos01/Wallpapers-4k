@@ -1,0 +1,64 @@
+
+<ion-content [fullscreen]="true">
+  <form [formGroup]="loginForm" (ngSubmit)="doLogin()">
+    <ion-card>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <app-input
+              [type]="'email'"
+              [label]="'Email'"
+              [placeholder]="'Enter your email'"
+              [control]="email"
+             >
+            </app-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <app-input
+    
+              [type]="'password'"
+              [label]="'Password'"
+              [placeholder]="'Enter your password'"
+              [control]="password"
+             >
+            </app-input>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-text color="medium" class="signup-link">
+              ¿Aún no estás registrado?
+              <app-link to="/register">Regístrate aquí</app-link>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+       
+        <ion-row>
+          <ion-col>
+            <app-button
+              text="Login"
+              type ="submit"
+              [disabled] ="loginForm.invalid"
+              
+            >
+            </app-button>
+          </ion-col>
+          <ion-col>
+            <app-button
+              text="Login with Google"
+              type ="button"
+              (click)="loginWithGoogle()"
+              [disabled] ="loginForm.invalid"
+
+              icon="logo-google"
+              [disabled]="false"
+            >
+            </app-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card>
+  </form>
+</ion-content>

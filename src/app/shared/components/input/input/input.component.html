@@ -1,0 +1,11 @@
+<ion-item>
+  <ion-input 
+  [label]="label" 
+  labelPlacement="floating"
+  [type]="type"
+  [value]="control.value"
+  [placeholder]="placeholder"
+  [readonly]="readonly"
+  (keyup)="doWrite($event)" 
+  ></ion-input>
+</ion-item>

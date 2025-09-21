@@ -1,0 +1,7 @@
+<a *ngIf="external" [href]="to" [attr.target]="target || '_blank'" rel="noopener noreferrer" class="app-link">
+  <ng-content></ng-content>
+</a>
+
+<a *ngIf="!external" [routerLink]="to" class="app-link">
+  <ng-content></ng-content>
+</a>
