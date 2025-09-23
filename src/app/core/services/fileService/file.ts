@@ -33,7 +33,7 @@ export class File {
       
     } catch (error) {
       await this.toast.show('Error al cargar la imagen', 'center');
-      return null;
+      throw error;
     }
   }
 }

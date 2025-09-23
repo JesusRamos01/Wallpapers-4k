@@ -1,22 +1,24 @@
-
-.title {
-  font-size: clamp(14px, 2vw, 18px); 
-  font-weight: 600;
-  margin: 4px 0;
+.wallpaper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px; 
+  padding: 16px;
 }
 
-.wallpaper-grid app-card {
-  display: block;
+app-card {
   width: 100%;
-  max-width: 300px; /* ancho máximo de cada card */
-  margin: 8px;
-  overflow: hidden;  /* asegura que nada se salga del contenedor */
+  height: 200px;              
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;           
   border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.wallpaper-grid app-card img {
+app-card img {
   width: 100%;
-  height: 200px;      /* altura uniforme */
-  object-fit: cover;  /* recorta sin deformar */
-  display: block;     /* elimina espacio inferior */
+  height: 100%;
+  object-fit: cover;          
+  border-radius: 12px;
 }

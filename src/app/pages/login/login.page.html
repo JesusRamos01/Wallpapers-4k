@@ -1,7 +1,8 @@
 
 <ion-content [fullscreen]="true">
   <form [formGroup]="loginForm" (ngSubmit)="doLogin()">
-    <ion-card>
+    <div class="container">
+ <ion-card >
       <ion-grid>
         <ion-row>
           <ion-col>
@@ -59,6 +60,8 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-    </ion-card>
+ </ion-card>
+    </div>
+   
   </form>
 </ion-content>

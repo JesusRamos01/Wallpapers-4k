@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UserImages } from './user-images';
+import { ActionSheet } from './action-sheet';
 
-describe('UserImages', () => {
-  let service: UserImages;
+describe('ActionSheet', () => {
+  let service: ActionSheet;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(UserImages);
+    service = TestBed.inject(ActionSheet);
   });
 
   it('should be created', () => {

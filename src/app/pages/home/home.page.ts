@@ -10,8 +10,9 @@ import { firstValueFrom } from 'rxjs';
 import { supabase } from 'src/app/supabase/supabase';
 import { Wallpaper } from 'src/app/shared/services/wallpaperService/wallpaper';
 import { Loading } from 'src/app/core/services/loadingService/loading';
+import { ActionSheet } from 'src/app/shared/providers/action-sheet';
 
-
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,7 @@ import { Loading } from 'src/app/core/services/loadingService/loading';
   standalone: false,
 })
 export class HomePage {
+  public wallpapers$ = this.wallpaperSrv.wallpapers$;
   private supabase = supabase;
   public wallpapers: any[] = [];
   public url: string = '';
@@ -32,125 +34,121 @@ export class HomePage {
     private readonly authSrv: Auth,
     private readonly router: Router,
     private readonly userSrv: User,
-    private wallpaperSrv: Wallpaper, 
-    private readonly loadingSrv: Loading) { }
+    public readonly wallpaperSrv: Wallpaper,
+    private readonly loadingSrv: Loading,
+    private readonly actionSheetSrv: ActionSheet
+  ) {}
 
   public async chooseAnImage() {
+    console.log('Iniciando chooseAnImage');
+
     const image = await this.fileSrv.pickImage();
+    console.log('Imagen seleccionada:', image);
+
     if (!image) {
-      await this.toastSrv.show('No seleccionaste ninguna imagen, intenta de nuevo');
+      console.log('No se seleccionó imagen');
+      await this.toastSrv.show(
+        'No seleccionaste ninguna imagen, intenta de nuevo'
+      );
       return;
     }
 
+    console.log('Imagen válida, procediendo a obtener usuario actual');
+    const currentUser = await firstValueFrom(
+      this.userSrv.getCurrentUser().pipe(filter((u) => !!u))
+    );
+    console.log('Usuario actual obtenido:', currentUser);
 
-    const currentUser = await firstValueFrom(this.userSrv.getCurrentUser()); // suponiendo que tu Auth tiene esto
     if (!currentUser) {
+      console.log('Usuario no autenticado');
       await this.toastSrv.show('Usuario no autenticado');
       return;
     }
 
-    const folder = `users/${currentUser.uid}`;
-    this.url = await this.uploaderSrv.upload(
-      'imagesWallpapers',
-      folder,
-      `${Date.now()}-${image.name}`,
-      image.data || '',
-      image.mimeType
-    );
-
-    await this.toastSrv.show('Imagen subida con éxito');
-  }
-
-
-
-  floatingActions: FloatingAction[] = [
-    { icon: 'cloud-upload', label: 'Subir', handler: () => this.chooseAnImage() },
-    { icon: 'heart', label: 'Favoritos', handler: () => this.goFavorites() },
-    { icon: 'refresh', label: 'Recargar', handler: () => this.reloadWallpapers() },
-    { icon: 'person-outline', label: 'perfil', handler: () => this.perfilAccount() }
-  ];
-
-  async loadWallpapers(uid: string) {
     try {
+      await this.loadingSrv.present('subiendo imagen...');
 
-      await this.loadingSrv.present('loading wallpapers...');
-      const { data, error } = await this.supabase
-        .storage
-        .from('imagesWallpapers')
-        .list('users/' + uid);
+      const folder = `users/${currentUser.uid}`;
+       console.log('Folder destino:', folder);
+      this.url = await this.uploaderSrv.upload(
+        'imagesWallpapers',
+        folder,
+        `${Date.now()}-${image.name}`,
+        image.data || '',
+        image.mimeType
+      );
 
-      if (error) {
-        await this.toastSrv.show('Error loading wallpapers, try again later');
-        this.wallpapers = [];
-        return;
-      }
+      await this.toastSrv.show('Imagen subida con éxito');
+      console.log('URL de la imagen subida:', this.url);
 
-      this.wallpapers = data.map(file => {
-        const { publicUrl } = this.supabase
-          .storage
-          .from('imagesWallpapers')
-          .getPublicUrl(`users/${uid}/${file.name}`).data;
+      const newWallpaper = { name: image.name, url: this.url };
 
-        return { ...file, url: publicUrl };
-      });
+      const currentWallpapers =
+        (await firstValueFrom(this.wallpaperSrv.wallpapers$)) || [];
+
+      console.log('Lista de wallpapers actual:', currentWallpapers);
+
+      this.wallpaperSrv.setWallpapers([newWallpaper, ...currentWallpapers]);
+      console.log('Lista de wallpapers actualizada:', [
+        newWallpaper,
+        ...currentWallpapers,
+      ]);
     } catch (err) {
-      await this.toastSrv.show('Error loading wallpapers, try again later');
-      this.wallpapers = [];
-    }finally {
+      console.error('Error subiendo la imagen:', err);
+      await this.toastSrv.show('Error subiendo la imagen, intenta de nuevo');
+    } finally {
       await this.loadingSrv.dismiss();
     }
   }
 
+  floatingActions: FloatingAction[] = [
+    {
+      icon: 'cloud-upload',
+      label: 'Subir',
+      handler: () => this.chooseAnImage(),
+    },
+    {
+      icon: 'person-outline',
+      label: 'perfil',
+      handler: () => this.perfilAccount(),
+    },
+  ];
+
   openWallpaper(wall: any) {
     console.log('Abrir wallpaper', wall);
-
   }
 
-  perfilAccount() {
-    try{
-      this.loadingSrv.present('loading profile...');
+  async perfilAccount() {
+    try {
+      await this.loadingSrv.present('loading profile...');
       this.router.navigate(['/update']);
-
-    }finally{
-      this.loadingSrv.dismiss();
+    } finally {
+      await this.loadingSrv.dismiss();
     }
-    
-  }
-
-  uploadWallpaper() {
-    console.log('Abrir modal de subida');
-
-  }
-
-  goFavorites() {
-    console.log('Ir a favoritos');
   }
 
   async logOut() {
-
-    try{
+    try {
       await this.loadingSrv.present('logging out...');
       await this.authSrv.logout();
       this.wallpapers = [];
       this.router.navigate(['/login']);
-    }finally{
+    } finally {
       await this.loadingSrv.dismiss();
     }
-    
   }
 
-  reloadWallpapers() {
-    console.log('Recargar lista de wallpapers');
+  onWallpaperClick(wall: any) {
+    this.actionSheetSrv.showWallpaperOptions(wall);
   }
 
-  onFloatingAction(ev: any) {
-    console.log('Acción FAB:', ev);
-  }
   async ngOnInit() {
-    this.userSrv.getCurrentUser().subscribe(user => {
-      if (user) this.loadWallpapers(user.uid);
-      else this.wallpapers = [];
+    this.userSrv.getCurrentUser().subscribe((user) => {
+      if (user) {
+        this.wallpaperSrv.getWallpapers(user.uid);
+      } else {
+        this.wallpaperSrv.clearWallpapers();
+      }
     });
   }
-
 }

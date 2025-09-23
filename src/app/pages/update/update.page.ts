@@ -18,37 +18,50 @@ export class UpdatePage implements OnInit {
   public email!: FormControl;
   public updateForm!: FormGroup;
 
-
   private uid!: string;
 
-  constructor(private userSrv: User, private authSrv: Auth, private toast: Toast, private router: Router, private loadSrv: Loading) {
+  constructor(
+    private userSrv: User,
+    private authSrv: Auth,
+    private toast: Toast,
+    private router: Router,
+    private loadSrv: Loading,
+    private loadingSrv: Loading
+  ) {
     this.initForm();
-
   }
 
   ngOnInit() {
     this.loadUser();
   }
   private initForm() {
-    this.name = new FormControl('', [Validators.required, Validators.minLength(3)]);
-    this.lastname = new FormControl('', [Validators.required, Validators.minLength(3)]);
-    this.email = new FormControl({ value: '', disabled: true }, [Validators.required, Validators.email]);
+    this.name = new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+    ]);
+    this.lastname = new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+    ]);
+    this.email = new FormControl({ value: '', disabled: true }, [
+      Validators.required,
+      Validators.email,
+    ]);
 
     this.updateForm = new FormGroup({
       name: this.name,
       lastname: this.lastname,
-      email: this.email
+      email: this.email,
     });
   }
 
-  private loadUser() {
-    this.userSrv.getCurrentUser().subscribe(user => {
+  private async loadUser() {
+    this.userSrv.getCurrentUser().subscribe((user) => {
       if (user) {
         this.uid = user.uid;
         this.name.setValue(user.name || '');
         this.lastname.setValue(user.lastname || '');
         this.email.setValue(user.email || '');
-
       }
     });
   }
@@ -62,7 +75,7 @@ export class UpdatePage implements OnInit {
     try {
       await this.userSrv.updateUser(this.uid, {
         name: this.name.value,
-        lastname: this.lastname.value
+        lastname: this.lastname.value,
       });
 
       this.loadSrv.present('Updating...');
@@ -79,5 +92,4 @@ export class UpdatePage implements OnInit {
   public atHome() {
     this.router.navigateByUrl('/home');
   }
-
 }

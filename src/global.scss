@@ -35,3 +35,48 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+
+
+ion-item {
+  --inner-padding-end: 8px;   
+  --padding-start: 8px;
+  margin-bottom: 12px;        
+}
+
+ion-label {
+  font-size: 14px;          
+}
+
+ion-input {
+  font-size: 15px;
+  --padding-start: 8px;       
+}
+
+ion-button {
+  font-size: 15px;           
+  --padding-start: 16px;     
+  --padding-end: 16px;       
+  --border-radius: 8px;      
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;  
+}
+
+@media (max-width: 600px) {
+  ion-card {
+    max-width: 95%;
+    padding: 12px;
+  }
+
+  ion-label {
+    font-size: 13px;
+  }
+
+  ion-input, ion-button {
+    font-size: 14px;
+  }
+}

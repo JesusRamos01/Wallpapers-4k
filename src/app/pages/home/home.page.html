@@ -1,37 +1,24 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-title>Wallpapers</ion-title>
-        <ion-buttons slot="end">
-            <app-button
-                (click)="logOut()"
-                icon="log-out-outline"
-            >
-
-            </app-button>
-        </ion-buttons>
-    </ion-toolbar>
-
+  <ion-toolbar>
+    <ion-title>Wallpapers</ion-title>
+    <ion-buttons slot="end">
+      <app-button (click)="logOut()" icon="log-out-outline"> </app-button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
-    <div class="wallpaper-grid">
-      <app-card class=".img"
-      *ngFor="let wall of wallpapers"
-      (click)="openWallpaper(wall)"
+  <div class="wallpaper-grid">
+    <app-card
+      *ngFor="let wall of (wallpaperSrv.wallpapers$ | async)"
+      (click)="onWallpaperClick(wall)"
       [image]="wall.url"
-    >
-    </app-card>
-    </div>
-
+    ></app-card>
+  </div>
 </ion-content>
 <ion-footer>
-    <div>
-        <app-floating-button
-            [icon]="'add'"
-            [actions]="floatingActions"
-            (action)="onFloatingAction($event)"
-        >
-        </app-floating-button>
-    </div>
+  <div>
+    <app-floating-button [icon]="'add'" [actions]="floatingActions">
+    </app-floating-button>
+  </div>
 </ion-footer>
